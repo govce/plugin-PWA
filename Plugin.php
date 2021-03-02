@@ -17,19 +17,19 @@ class Plugin extends \MapasCulturais\Plugin
     {
         $app = App::i();
 
-        
+        if (file_exists(BASE_PATH . 'manifest.json')) {
+            copy(BASE_PATH .'protected/application/plugins/PWA/assets/manifest.json', BASE_PATH . 'manifest.json' );
+        }
+
+        if (file_exists(BASE_PATH . 'serviceWorker.js')) {
+            copy(BASE_PATH .'protected/application/plugins/PWA/assets/js/serviceWorker.js', BASE_PATH . 'serviceWorker.js' );
+        }
+
         $app->view->assetManager->publishFolder('pwa/img', 'pwa/img');
-        $app->view->assetManager->publishAsset('pwa/files/manifest.json', 'pwa/files/manifest.json');
-        $app->view->assetManager->publishAsset('js/serviceWorker.js', 'pwa/files/serviceWorker.js');
-
+        
         $app->view->enqueueScript('app', 'pwa', 'js/a2h.js');
-
-
-        //$app->view->enqueueScript('app', 'pwa', 'js/a2hs.js');
-        //$app->view->enqueueScript('app', 'pwa', 'js/addtohomescreen.js');
-        //$app->view->enqueueStyle('app', 'pwa', 'js/addtohomescreen.js');
-
-         // add hooks
+       
+        // add hooks
          $app->hook('template(<<*>>.<<*>>.head):begin', function () use ($app) {
             $this->part('pwa/manifest');
         });
