@@ -21,7 +21,11 @@ class Plugin extends \MapasCulturais\Plugin
         $app->view->assetManager->publishFolder('pwa/img', 'pwa/img');
         $app->view->assetManager->publishAsset('pwa/files/manifest.json', 'pwa/files/manifest.json');
         $app->view->assetManager->publishAsset('js/serviceWorker.js', 'pwa/files/serviceWorker.js');
-        $app->view->enqueueScript('app', 'pwa', 'js/a2hs.js');
+
+        $app->view->enqueueScript('app', 'pwa', 'js/a2h.js');
+
+
+        //$app->view->enqueueScript('app', 'pwa', 'js/a2hs.js');
         //$app->view->enqueueScript('app', 'pwa', 'js/addtohomescreen.js');
         //$app->view->enqueueStyle('app', 'pwa', 'js/addtohomescreen.js');
 
