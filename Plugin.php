@@ -17,16 +17,16 @@ class Plugin extends \MapasCulturais\Plugin
     {
         $app = App::i();
 
-        if (file_exists(BASE_PATH . 'manifest.json')) {
+        if (!file_exists(BASE_PATH . 'manifest.json')) {
             copy(BASE_PATH .'protected/application/plugins/PWA/assets/manifest.json', BASE_PATH . 'manifest.json' );
         }
 
-        if (file_exists(BASE_PATH . 'serviceWorker.js')) {
+        if (!file_exists(BASE_PATH . 'serviceWorker.js')) {
             copy(BASE_PATH .'protected/application/plugins/PWA/assets/js/serviceWorker.js', BASE_PATH . 'serviceWorker.js' );
         }
 
         $app->view->assetManager->publishFolder('pwa/img', 'pwa/img');
-        
+
         $app->view->enqueueScript('app', 'pwa', 'js/a2h.js');
        
         // add hooks
