@@ -1,15 +1,10 @@
-<!-- 
-    <p>Hello Worldd!</p>
-    <button class="add-button">Add To Home</button> 
--->
-
-<div id="a2h-box" style="display: none; position: fixed; top: 0; left: 0; right: 0; height: auto; width: 100%; z-index: 9999; min-height: 40px; color: #282b2d; background-color: #e7efff; padding: 10px 15px; border-bottom: 2px solid #191919;">
+<div id="a2h-box" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; height: auto; z-index: 9999; min-height: 40px; color: #282b2d; background-color: #fff; padding: 10px 15px; border-top: 4px solid #085E55;">
     <div class="row">
-        <div class="col-6">
-            <span style="line-height: 30px;">Instalar Aplicativo Mapas Culturais do Ceará?</span>
+        <div>
+            <span style="line-height: 30px;">Instalar Aplicativo Mapas Culturais do Ceará ?</span>
         </div>
 
-        <div class="col-6 text-right">
+        <div>
             <button id="btn-reject" class="btn btn-sm btn-light">
                 Ignorar
             </button>
@@ -20,7 +15,7 @@
     </div>
 
     <div class="platform-ios">
-        Clique
+        Clique em
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="icon-iphone-popup"
              style="width: 20px; height: 20px; transform: translate(0px, 3px); -ms-transform: translate(0px, 3px); -webkit-transform: translate(0px, 3px); -o-transform: translate(0px, 3px); -moz-transform: translate(0px, 3px); enable-background:new 0 0 58.999 58.999;"
              viewBox="0 0 58.999 58.999" xml:space="preserve">
@@ -30,12 +25,12 @@
                     C18.967,11.922,19.223,12.019,19.479,12.019z"></path>
             <path d="M36.499,15.999c-0.553,0-1,0.447-1,1s0.447,1,1,1h13v39h-40v-39h13c0.553,0,1-0.447,1-1s-0.447-1-1-1h-15v43h44v-43H36.499z"></path>
         </svg>
-        'Instalar Aplicativo Mapas Culturais do Ceará'
+        para adicionar Mapas Culturais do Ceará em seu smartphone.
     </div>
     
     <script>
 
-        $(document).ready(function(){
+        $(document).ready(function(){            
 
             let A2HClass = function (options) {
                 let vars = {
@@ -69,8 +64,8 @@
                     // user cancelled app install - do not ask again until cookie expires
                     if (getCookie(vars.cookieName) === vars.cookieValue) {
                         // vars.a2hBox.style.display = 'none';
-                        vars.a2hBox.parentNode.removeChild(vars.a2hBox);
-                        return;
+                        //vars.a2hBox.parentNode.removeChild(vars.a2hBox);
+                        //return;
                     }
 
                     // if in standalone - do not register
@@ -79,14 +74,14 @@
                     }
 
                     // debug / local environment
-                    // activateAndShowInstallBanner();
+                     activateAndShowInstallBanner();
                 }
 
                 // register service worker
                 let registerServiceWorker = function () {
                     if ('serviceWorker' in navigator) {
                         window.addEventListener('load', function () {
-                            navigator.serviceWorker.register('/serviceworker.js').then(function (registration) {
+                            navigator.serviceWorker.register('./serviceworker.js').then(function (registration) {
                                 // registration successful
                                 activateAndShowInstallBanner();
                             }, function (err) {
@@ -94,6 +89,12 @@
                             });
                         });
                     }
+                }
+                let a2hBoxShow = function () {
+                    var $mainHeader = $('#main-header');
+                    var headerHeight = $mainHeader.outerHeight(true);
+
+                    vars.a2hBox.style.display = 'block';
                 }
 
                 // activate
@@ -104,19 +105,20 @@
                         return;
                     }
 
+                    
                     if (!!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)) {
-                        vars.a2hBox.style.display = 'block';
+                        a2hBoxShow();
                         document.querySelector('.platform-android').style.display = "none";
                     } else {
                         document.querySelector('.platform-ios').style.display = "none";
-                    }
+                    }                    
 
                     // listen for the before installprompt - when pwa can be installed to this device
                     window.addEventListener('beforeinstallprompt', function (e) {
                         // Prevent Chrome 67 and earlier from automatically showing the prompt
                         e.preventDefault();
                         deferredPrompt = e;
-                        vars.a2hBox.style.display = 'block';
+                        a2hBoxShow();
 
                         document.getElementById('btn-accept').addEventListener('click', acceptHomeScreen);
                     });
@@ -144,7 +146,7 @@
                     vars.a2hBox.style.display = 'none';
 
                     //UTILS.doAjax("/api/a2h/cancelled");
-                    setCookie(vars.cookieName, vars.cookieValue, 30);
+                    setCookie(vars.cookieName, vars.cookieValue, 7);
                 }
 
                 let isMobileDevice = function () {
@@ -156,6 +158,7 @@
                     let d = new Date();
                     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
                     let expires = "expires=" + d.toUTCString();
+                    alert('')
                     document.cookie = name + "=" + value + ";" + expires + ";path=/";
                 }
 
@@ -177,8 +180,7 @@
                 this.construct(options);
             };
 
-            new A2HClass();
-
+            new A2HClass();      
         });
 
     </script>

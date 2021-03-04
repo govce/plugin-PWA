@@ -5,7 +5,14 @@ namespace PWA;
 use MapasCulturais\App;
 use MapasCulturais\i;
 
-
+/**
+ * Plugin PWA
+ * config examples
+ * 'PWA' => [
+ *             'namespace' => 'PWA',
+ *             'config' => ['onesignal_key' => '99999999999-9999999999-999999999']
+ *  ],
+ */
 class Plugin extends \MapasCulturais\Plugin
 {
     function __construct(array $config = [])
@@ -16,18 +23,16 @@ class Plugin extends \MapasCulturais\Plugin
     public function _init()
     {
         $app = App::i();
+        $plugin = $this;
+        
+        $this->copyFileToWebRootFolder('assets/manifest.json');
+        $this->copyFileToWebRootFolder('assets/serviceWorker.js');
+        $this->copyFileToWebRootFolder('assets/js/OneSignalSDKWorker.js');
+        $this->copyFileToWebRootFolder('assets/js/OneSignalSDKUpdaterWorker.js');
 
-        if (!file_exists(BASE_PATH . 'manifest.json')) {
-            copy(BASE_PATH .'protected/application/plugins/PWA/assets/manifest.json', BASE_PATH . 'manifest.json' );
+        if (!file_exists(BASE_PATH . 'assets/pwa/img')) {
+            $app->view->assetManager->publishFolder('pwa/img', 'pwa/img');
         }
-
-        if (!file_exists(BASE_PATH . 'serviceWorker.js')) {
-            copy(BASE_PATH .'protected/application/plugins/PWA/assets/js/serviceWorker.js', BASE_PATH . 'serviceWorker.js' );
-        }
-
-        $app->view->assetManager->publishFolder('pwa/img', 'pwa/img');
-
-        $app->view->enqueueScript('app', 'pwa', 'js/a2h.js');
        
         // add hooks
          $app->hook('template(<<*>>.<<*>>.head):begin', function () use ($app) {
@@ -35,16 +40,26 @@ class Plugin extends \MapasCulturais\Plugin
         });
 
          // add hooks
-         $app->hook('template(<<*>>.<<*>>.main-footer):end', function () use ($app) {
+         $app->hook('template(<<*>>.<<*>>.main-footer):end', function () use ($app,$plugin) {
             $this->part('pwa/a2hs');
+            $this->part('pwa/onesignal',['config' => $plugin->config]);
         });
         
     }
 
     public function register()
     {
-        $app = App::i();
-            
+        $app = App::i();            
+    }
+
+    public function copyFileToWebRootFolder($file, $fileName = null) {
+        $fileName = ($file == null)? basename(PLUGINS_PATH.$file) : $fileName;
+        $fileWebRootPath = BASE_PATH . $fileName;
+        $filePluginPath = PLUGINS_PATH ."PWA/$file";
+
+        if (!file_exists($fileWebRootPath)) {
+            copy($filePluginPath, $fileWebRootPath);
+        }
     }
 }
 ?>
