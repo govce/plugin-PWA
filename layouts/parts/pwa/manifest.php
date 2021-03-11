@@ -1,4 +1,8 @@
-<link rel="manifest" href="manifest.json" />
+<?php 
+    use MapasCulturais\App;
+    $app = App::i();
+?>
+<link rel="manifest" href="<?=$app->getBaseUrl();?>manifest.json" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
